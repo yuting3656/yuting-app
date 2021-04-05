@@ -4,7 +4,7 @@ export type RootStackParamList = {
 };
 
 export type BottomTabParamList = {
-  TabOne: undefined;
+  看看: undefined; // camera
   TabTwo: undefined;
 };
 

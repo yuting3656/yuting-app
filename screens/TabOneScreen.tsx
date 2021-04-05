@@ -1,15 +1,56 @@
-import * as React from 'react';
-import { StyleSheet } from 'react-native';
-
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
+import { Camera } from 'expo-camera'
+
+//
+// IMPORT ZONE
+//
 
 export default function TabOneScreen() {
+  const [ cameraPermission, setCameraPermission ] = useState(false);
+  const [ type, setType] = useState(Camera.Constants.Type.back);
+
+
+ useEffect(() => {
+   (async () => {
+     const { status } = await Camera.requestPermissionsAsync();
+     setCameraPermission(status === 'granted')
+   })();
+ }, [])
+
+ if (cameraPermission === false) {
+   return <Text> 給一下權限拉~~~ 拜託~~~! </Text>;
+ }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="/screens/TabOneScreen.tsx" />
+      <Camera 
+        ratio="3:4"
+        type={type}
+        style={{ 
+          width: '100%',
+          height: '80%',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+        }}
+        >
+        </Camera>
+
+        <View >
+          <TouchableOpacity
+            onPress={() => {
+              setType(
+                type === Camera.Constants.Type.back
+                  ? Camera.Constants.Type.front
+                  : Camera.Constants.Type.back
+              );
+            }}>
+            <Text> 我轉~ </Text>
+          </TouchableOpacity>
+        </View>
     </View>
   );
 }
@@ -30,3 +71,7 @@ const styles = StyleSheet.create({
     width: '80%',
   },
 });
+function asysnc() {
+  throw new Error('Function not implemented.');
+}
+
