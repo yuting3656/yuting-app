@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import EditScreenInfo from '../components/EditScreenInfo';
+import { useIsFocused } from '@react-navigation/native'
 import { Text, View } from '../components/Themed';
 import { Camera } from 'expo-camera'
 
@@ -9,6 +9,7 @@ import { Camera } from 'expo-camera'
 //
 
 export default function TabOneScreen() {
+  const isFocuse = useIsFocused()
   const [ cameraPermission, setCameraPermission ] = useState(false);
   const [ type, setType] = useState(Camera.Constants.Type.back);
 
@@ -18,6 +19,10 @@ export default function TabOneScreen() {
      const { status } = await Camera.requestPermissionsAsync();
      setCameraPermission(status === 'granted')
    })();
+
+   return () => {
+     setCameraPermission(false)
+   }
  }, [])
 
  if (cameraPermission === false) {
@@ -26,7 +31,7 @@ export default function TabOneScreen() {
 
   return (
     <View style={styles.container}>
-      <Camera 
+      { isFocuse && <Camera 
         ratio="3:4"
         type={type}
         style={{ 
@@ -37,8 +42,7 @@ export default function TabOneScreen() {
           left: 0,
         }}
         >
-        </Camera>
-
+        </Camera>}
         <View >
           <TouchableOpacity
             onPress={() => {
